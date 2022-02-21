@@ -18,6 +18,9 @@ from PIL import ImageFile
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+from smdebug import modes
+from smdebug.pytorch import get_hook
+
 #For Logging
 logger=logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -29,33 +32,107 @@ def test(model, test_loader, criterion, device):
     model.eval()
     running_loss=0
     running_corrects=0
+    total_data_len = 0
+    pred = []
+    label = []
     
     for inputs, labels in test_loader:
         inputs=inputs.to(device) #FOR GPU
         labels=labels.to(device) #FOR GPU  
         outputs=model(inputs)
+        logger.info(f"Outputs: {outputs}")
         loss=criterion(outputs, labels)
         _, preds = torch.max(outputs, 1)
+        logger.info(f"Prediction is:{preds}")
+        logger.info(f"Label is: {labels.data}")
+        new_pred = preds.tolist()
+        new_label= labels.data.tolist()
+        logger.info(f"Prediction List:{new_pred}")
+        logger.info(f"Label List: {new_label}")
+        pred.extend(new_pred)
+        label.extend(new_label)
+        logger.info(f"Final Prediction List Updated:{pred}")
+        logger.info(f"Final Label List Updated: {label}")
+        
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
+        total_data_len+= len(labels.data)
+        logger.info(f"Correct are: {torch.sum(preds == labels.data)}")
+        logger.info(f"Running Corrects are: {running_corrects}")
 
+    metrics = {0:{"tp":0, "fp":0}, 1:{"tp":0, "fp":0}, 2:{"tp":0, "fp":0}, 3:{"tp":0, "fp":0}, 4:{"tp":0, "fp":0}}
+    label_count = {0:0, 1:0, 2:0, 3:0, 4:0}
+    for l, p in zip(label, pred):
+        label_count[l]+=1
+        if(p==l):
+            metrics[l]["tp"]+=1
+        else:
+            metrics[p]["fp"]+=1
+            
+    logger.info(f"Metrics Computed: {metrics}")
+    logger.info(f"Label Count Computed: {label_count}")
+    Precision = {0:0, 1:0, 2:0, 3:0, 4:0}
+    Recall = {0:0, 1:0, 2:0, 3:0, 4:0}
+    F1 = {0:0, 1:0, 2:0, 3:0, 4:0}
+    
+    for c in Precision:
+        denom = metrics[c]["tp"] + metrics[c]["fp"]
+        if(denom==0):
+            Precision[c]==0
+        else:
+            num = metrics[c]["tp"]
+            Precision[c] = num/denom
+    
+    
+    for c in Recall:
+        denom = label_count[c]
+        if(denom==0):
+            Recall[c]==0
+        else:
+            num = metrics[c]["tp"]
+            Recall[c] = num/denom
+            
+    for c in F1:
+        if(Precision[c]==0 and Recall[c]==0):
+            F1[c]=0
+        else:
+            num = 2*Precision[c]*Recall[c]
+            denom = Precision[c] + Recall[c]
+            F1[c] = num/denom
+            
+    
+    logger.info(f"Precision Computed: {Precision}")
+    logger.info(f"Recall Computed: {Recall}")
+    logger.info(f"F1 Computed: {F1}")
+    
+    
+    logger.info(f"Test Len: {total_data_len}")
+    logger.info(f"{running_corrects.double()}")
     total_loss = running_loss // len(test_loader)
-    total_acc = running_corrects.double() // len(test_loader)
+    new_acc = float(running_corrects)/float(total_data_len)
     
     logger.info(f"Testing Loss: {total_loss}")
-    logger.info(f"Testing Accuracy: {total_acc}")
+    logger.info(f"Testing Accuracy: {new_acc}")
 
 def train(model, train_loader, validation_loader, criterion, optimizer, device):
-    epochs=5 #5 Epochs while fine tuning for HP Search
+    hook = get_hook(create_if_not_exists=True)
+    if hook:
+        hook.register_loss(criterion)
+    epochs=10 #5 Epochs while fine tuning for HP Search
     image_dataset={'train':train_loader, 'valid':validation_loader}
     
     for epoch in range(epochs):
         logger.info(f"Epoch: {epoch}")
+        total_data_len = 0
         for phase in ['train', 'valid']:
             if phase=='train':
                 model.train()
+                if hook:
+                    hook.set_mode(modes.TRAIN)
             else:
                 model.eval()
+                if hook:
+                    hook.set_mode(modes.EVAL)
             running_loss = 0.0
             running_corrects = 0
 
@@ -73,12 +150,15 @@ def train(model, train_loader, validation_loader, criterion, optimizer, device):
                 _, preds = torch.max(outputs, 1)
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
+                total_data_len+= len(labels.data)
 
             epoch_loss = running_loss // len(image_dataset[phase])
-            epoch_acc = running_corrects // len(image_dataset[phase])
+            epoch_acc = float(running_corrects) / float(total_data_len)
             
-
             logger.info('{} loss: {:.4f}, acc: {:.4f}'.format(phase,epoch_loss,epoch_acc))
+            
+            if(epoch==(epochs-1) and phase=="valid"): #Last epoch's validation is objective metric
+                logger.info('Final Validation Loss: {:.4f}, acc: {:.4f}'.format(epoch_loss,epoch_acc))
         
     return model
     
