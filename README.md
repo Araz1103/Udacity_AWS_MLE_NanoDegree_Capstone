@@ -1,7 +1,28 @@
 # Udacity_AWS_MLE_NanoDegree_Capstone
-## This is the repository for the Capstone Project for the Udacity AWS Machine Learning Engineer Nano Degree
+## This is the repository for the Capstone Project for the Udacity Scholarship AWS Machine Learning Engineer Nano Degree
 
-### `proposal.pdf` is the Capstone Project Proposal 
+
+
+## Files and Folders in this Repo
+
+- `proposal.pdf` is the Capstone Project Proposal 
+- `Capstone_Project_Report.pdf` is the Capstone Project Report
+
+### Data Related Notebooks
+
+- `Create_Data_Capstone.ipynb` creates the Initial Dataset with `file_list.json` as a requirement
+- `Get_More_Data_Script.ipynb` is for getting additional data to remove class imbalance -> This creates `New_Data` folder 
+- `New_Data` Folder is used by `Create_Data_Capstone.ipynb` to balance the classes and create the Final Dataset to be used. 
+- `file_list.json` is the initial meta data file provided by Udacity for getting a subset of the Amazon Bin Image Dataset
+
+- The main notebook is the `train_and_deploy.ipynb` which has the entire project flow
+- `hpo-gpu.py` is the script used for Hyper Parameter Tuning used by the `train_and_deploy.ipynb`
+- `train_model.py` is the script used for Training with Debugger & Profiler used by the `train_and_deploy.ipynb`
+- `inference.py` is the script helping create a Pytorch model from the best trained model, being used by the `train_and_deploy.ipynb`
+- `dog_test.txt`, `dog_train.txt`, `dog_valid.txt` & `dog_train_folders.txt` are text files created by me, helping to check if all Dogs Breed Dataset files have been successfully uploaded to the S3 Bucket
+- `ProfilerReport` Folder contains the Profiler Report in HTML, the corresponding Jupyter NB which generated it, and another folder called `profile-reports` which contains JSON files for Profiler Outputs
+- `screenshots` Folder contains all relevant screenshots on the training, hyper paramter tuning and deploying the model
+- Profiler Plots I - III are files being used by `train_and_deploy.ipynb`, since they may not be directly visible in the code cell output. These plots are made from the JSON files present in the `profile-reports` folder. 
 
 
 # Inventory Monitoring at Distribution Centres
@@ -18,6 +39,8 @@ The problem we aim to tackle in this project is to count the number of items pre
 
 
 ## Project Set Up and Installation
+
+T
 **OPTIONAL:** If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to make your `README` detailed and self-explanatory. For instance, here you could explain how to set up your project in AWS and provide helpful screenshots of the process.
 
 ## Dataset
