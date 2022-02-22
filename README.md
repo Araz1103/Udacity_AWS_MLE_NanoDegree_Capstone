@@ -59,7 +59,11 @@ To understand more about the Data, see `Create_Data_Capstone.ipynb`
 Use `Create_Data_Capstone.ipynb` to create Dataset for Model Training, and upload in S3 through Web Browser or CLI
 
 ## Model Training
-**`Final_Model_Train_Inference.ipynb` details this process and shows how we beat the Benchmark
+`Final_Model_Train_Inference.ipynb` details this process and shows how we beat the Benchmark
+
+### We chose a Resnet50 Pre-Trained Model, and did Hyper Parameter Searching to refine it further and further
+### The Best Model we had was with HP: Batch Size 32, Learning Rate: 0.002, trained for 10 Epochs
+### The details are in the Capstone Report and Final Model Training Notebook
 
 ## Machine Learning Pipeline
 
@@ -71,8 +75,27 @@ Use `Create_Data_Capstone.ipynb` to create Dataset for Model Training, and uploa
 3. **Training different Models:** `Final_Model_Train_Inference.ipynb` documents how different Models were trained to beat Benchmark
 4. **Model Evaluation and Deployment:**`Final_Model_Train_Inference.ipynb` documents the evaluation and deployment on SageMaker
 
+
+### Benchmark vs. Best Model
+
+| **Class** | **F1 for Benchmark** | **F1 for Best Model** |
+|-----------|----------------------|-----------------------|
+| **1**     | 0.575                | 0.663                 |
+| **2**     | 0.258                | 0.302                 |
+| **3**     | 0.151                | 0.180                 |
+| **4**     | 0.150                | 0.281                 |
+| **5**     | 0.412                | 0.483                 |
+
+
+| **Accuracy for Benchmark** | **Accuracy for Best Model** | **% Increase in Accuracy** |
+|----------------------------|-----------------------------|----------------------------|
+| 0.354 = 35.4%              | 0.4 = 40%                   | 0.046 = 4.6%               |
+
+
+
 ## Standout Suggestions
 
 1. HP Tuning
 2. Model Deployment and Inference
 3. Debugger and Profiler Report
+4. Created a custom script for Balancing Classes by fetching additional data (`Get_More_Data_Script.ipynb`)
