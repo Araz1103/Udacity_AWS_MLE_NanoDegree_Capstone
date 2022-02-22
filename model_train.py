@@ -27,6 +27,7 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 # Test Function 
+# Metrics are added here to be Logged during Model Testing
 
 def test(model, test_loader, criterion, device):
     model.eval()
@@ -174,6 +175,7 @@ def net():
                    nn.Linear(128, 5))
     return model
 
+# Transformations as decided in Data Visualisation Phase
 def create_data_loaders(data, batch_size):
     train_data_path = os.path.join(data, 'train_data')
     test_data_path = os.path.join(data, 'test_data')
