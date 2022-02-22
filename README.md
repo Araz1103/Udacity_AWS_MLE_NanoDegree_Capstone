@@ -47,27 +47,32 @@ The robots carry objects which are present in bins, and for our problem, each bi
 The problem we aim to tackle in this project is to count the number of items present in the bin. This is an **Multi-Class Image Classification task**, of classifying number of items in 1 – 5 in input image. This is a worthwhile problem to solve, for it has immense real world applications. If we can develop a model, which can take in a picture of a bin, and accurately return the number of objects present in that, we could solve & thus fully automate one crucial step in the Inventory Management process! 
 
 
-## Project Set Up and Installation
-
-T
-**OPTIONAL:** If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to make your `README` detailed and self-explanatory. For instance, here you could explain how to set up your project in AWS and provide helpful screenshots of the process.
-
 ## Dataset
 
 ### Overview
 
 The dataset used in this problem is the open source Amazon Bin Image Dataset. This dataset has 500,000 images of bins containing one or more objects present in it. Corresponding to each image, is a metadata file, which contains information about the image, like the number of objects it has, the dimensions and type of objects. For our problem statement, we only need the total count of objects in the image. 
 
-**TODO**: Explain about the data you are using and where you got it from.
+To understand more about the Data, see `Create_Data_Capstone.ipynb`
 
 ### Access
-**TODO**: Explain how you are accessing the data in AWS and how you uploaded it
+Use `Create_Data_Capstone.ipynb` to create Dataset for Model Training, and upload in S3 through Web Browser or CLI
 
 ## Model Training
-**TODO**: What kind of model did you choose for this experiment and why? Give an overview of the types of hyperparameters that you specified and why you chose them. Also remember to evaluate the performance of your model.
+**`Final_Model_Train_Inference.ipynb` details this process and shows how we beat the Benchmark
 
 ## Machine Learning Pipeline
-**TODO:** Explain your project pipeline.
+
+### The Project Jupyter Notebooks are very well documented with Markdowns to guide you. 
+### Following the below sequence will help understand the pipeline and implement the project on your own:
+
+1. **Data Preparation and Analysis:** `Create_Data_Capstone.ipynb` documents this process and has the analysis results
+2. **Creating Benchmarks for Project:** `Benchmark_Model.ipynb` documents how the Benchmarks were chosen and created in SageMaker
+3. **Training different Models:** `Final_Model_Train_Inference.ipynb` documents how different Models were trained to beat Benchmark
+4. **Model Evaluation and Deployment:**`Final_Model_Train_Inference.ipynb` documents the evaluation and deployment on SageMaker
 
 ## Standout Suggestions
-**TODO (Optional):** This is where you can provide information about any standout suggestions that you have attempted.
+
+1. HP Tuning
+2. Model Deployment and Inference
+3. Debugger and Profiler Report
