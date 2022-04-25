@@ -1,7 +1,7 @@
 # Udacity_AWS_MLE_NanoDegree_Capstone
 ## This is the repository for the Capstone Project for the Udacity Scholarship AWS Machine Learning Engineer Nano Degree
 
-
+NOTE: THIS PROJECT HAS BEEN REVIEWED AND APPROVED BY AN UDACITY NANODEGREE MENTOR
 
 ## Files and Folders in this Repo
 
